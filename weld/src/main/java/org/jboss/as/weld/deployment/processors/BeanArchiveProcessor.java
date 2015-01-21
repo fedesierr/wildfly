@@ -51,7 +51,6 @@ import org.jboss.as.server.deployment.annotation.AnnotationIndexUtils;
 import org.jboss.as.server.deployment.module.ModuleRootMarker;
 import org.jboss.as.server.deployment.module.ResourceRoot;
 import org.jboss.as.server.deployment.reflect.DeploymentReflectionIndex;
-import org.jboss.as.weld.logging.WeldLogger;
 import org.jboss.as.weld.deployment.BeanDeploymentArchiveImpl;
 import org.jboss.as.weld.deployment.BeanDeploymentArchiveImpl.BeanArchiveType;
 import org.jboss.as.weld.deployment.BeanDeploymentModule;
@@ -60,6 +59,7 @@ import org.jboss.as.weld.deployment.ExplicitBeanArchiveMetadataContainer;
 import org.jboss.as.weld.deployment.WeldAttachments;
 import org.jboss.as.weld.discovery.AnnotationType;
 import org.jboss.as.weld.ejb.EjbDescriptorImpl;
+import org.jboss.as.weld.logging.WeldLogger;
 import org.jboss.as.weld.services.bootstrap.WeldJaxwsInjectionServices;
 import org.jboss.as.weld.services.bootstrap.WeldJpaInjectionServices;
 import org.jboss.as.weld.util.Indices;
@@ -304,10 +304,6 @@ public class BeanArchiveProcessor implements DeploymentUnitProcessor {
             for (AnnotationType beanDefiningAnnotation : beanDefiningAnnotations) {
                 List<AnnotationInstance> annotationInstances = index.getAnnotations(beanDefiningAnnotation.getName());
                 implicitBeanClasses.addAll(Lists.transform(Indices.getAnnotatedClasses(annotationInstances), Indices.CLASS_INFO_TO_FQCN));
-            }
-            //make all components into implicit beans so they will support injection
-            for(ComponentDescription description : components.componentDescriptions.get(resourceRoot)) {
-                implicitBeanClasses.add(description.getComponentClassName());
             }
             return implicitBeanClasses;
         }
